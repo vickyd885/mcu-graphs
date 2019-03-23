@@ -9,3 +9,8 @@ canvas{
   height:600px !important;
 
 }
+
+.graph{
+  text-align: center;
+  margin: 2%;
+}

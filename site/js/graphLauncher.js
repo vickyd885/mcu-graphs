@@ -2,9 +2,19 @@
 Load dataset and parse values before displaying on graph
  */
 
+ function getRandomColor() {
+     var letters = '0123456789ABCDEF'.split('');
+     var color = '#';
+     for (var i = 0; i < 6; i++ ) {
+         color += letters[Math.floor(Math.random() * 16)];
+     }
+     return color;
+ }
+
 
  $.getJSON("datasets/mcu_data_locked.json", function(json) {
    loadGlobalBoxOfficeGraph(json);
+   loadDailyBoxOfficeGraph(json);
 
  });
 
@@ -45,6 +55,33 @@ Load dataset and parse values before displaying on graph
 
  }
 
+ function getDailyBoxOfficeData(movieList){
+   datasets = []
+   maxLabelLength = 0;
+   movieList.forEach(function(movie){
+     dataset = {
+       label: movie.movie,
+       backgroundColor: getRandomColor(),
+       data: []
+     }
+     if(movie.bom_data.daily == null){
+       console.log("No data for " + movie.movie)
+       return;
+     }
+     movie.bom_data.daily.forEach(function(day){
+       amount = getMonetaryValue(day.gross);
+       dataset.data.push(amount)
+     });
+     if(dataset.data.length > maxLabelLength) maxLabelLength = dataset.data.length;
+     datasets.push(dataset);
+   });
+   console.log(maxLabelLength);
+   labels = Array.apply(null, {length: maxLabelLength}).map(Number.call, Number)
+   console.log(labels);
+   return [labels, datasets]
+
+ }
+
 
 function loadGlobalBoxOfficeGraph(json){
   cleaned_data = getGlobalBoxOfficeData(json);
@@ -65,6 +102,24 @@ function loadGlobalBoxOfficeGraph(json){
         yAxes: [{
             stacked: true
         }]
+      }
+    }
+  })
+}
+
+function loadDailyBoxOfficeGraph(json){
+  cleaned_data = getDailyBoxOfficeData(json);
+  var ctx = document.getElementById('dailyboxoffice').getContext('2d');
+  console.log(cleaned_data);
+  var globalChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: cleaned_data[0],
+      datasets: cleaned_data[1]
+    },
+    options: {
+    scales: {
+        responsive: true
       }
     }
   })
