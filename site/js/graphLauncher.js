@@ -20,7 +20,7 @@ Load dataset and parse values before displaying on graph
 
  function getMonetaryValue(amount){
    // return 400 from $4,00 etc
-   return parseInt(amount.replace('$','').replace(',',''));
+   return parseFloat(amount.replace('$','').replace(',','').replace(',','').replace(',','') / 1000000);
 
  }
 
@@ -61,7 +61,8 @@ Load dataset and parse values before displaying on graph
    movieList.forEach(function(movie){
      dataset = {
        label: movie.movie,
-       backgroundColor: getRandomColor(),
+       borderColor: getRandomColor(),
+       fill: false,
        data: []
      }
      if(movie.bom_data.daily == null){
@@ -76,7 +77,7 @@ Load dataset and parse values before displaying on graph
      datasets.push(dataset);
    });
    console.log(maxLabelLength);
-   labels = Array.apply(null, {length: maxLabelLength}).map(Number.call, Number)
+   labels = Array.apply(null, {length: 60}).map(Number.call, Number)
    console.log(labels);
    return [labels, datasets]
 
@@ -100,7 +101,11 @@ function loadGlobalBoxOfficeGraph(json){
             stacked: true
         }],
         yAxes: [{
-            stacked: true
+            stacked: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Dollars ($/million)'
+            }
         }]
       }
     }
@@ -119,51 +124,20 @@ function loadDailyBoxOfficeGraph(json){
     },
     options: {
     scales: {
-        responsive: true
+        responsive: true,
+        yAxes:[{
+          scaleLabel: {
+            display: true,
+            labelString: 'Dollars ($/million)'
+          }
+        }],
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Days after release'
+          }
+        }]
       }
     }
   })
 }
-
-
-
-
-//
-//
-// var ctx = document.getElementById('mcu_graph').getContext('2d');
-// var myChart = new Chart(ctx, {
-//     type: 'bar',
-//     data: {
-//         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-//         datasets: [{
-//             label: '# of Votes',
-//             data: [12, 19, 3, 5, 2, 3],
-//             backgroundColor: [
-//                 'rgba(255, 99, 132, 0.2)',
-//                 'rgba(54, 162, 235, 0.2)',
-//                 'rgba(255, 206, 86, 0.2)',
-//                 'rgba(75, 192, 192, 0.2)',
-//                 'rgba(153, 102, 255, 0.2)',
-//                 'rgba(255, 159, 64, 0.2)'
-//             ],
-//             borderColor: [
-//                 'rgba(255, 99, 132, 1)',
-//                 'rgba(54, 162, 235, 1)',
-//                 'rgba(255, 206, 86, 1)',
-//                 'rgba(75, 192, 192, 1)',
-//                 'rgba(153, 102, 255, 1)',
-//                 'rgba(255, 159, 64, 1)'
-//             ],
-//             borderWidth: 1
-//         }]
-//     },
-//     options: {
-//         scales: {
-//             yAxes: [{
-//                 ticks: {
-//                     beginAtZero: true
-//                 }
-//             }]
-//         }
-//     }
-// });
