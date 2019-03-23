@@ -1,0 +1,11 @@
+body {
+  text-align: center;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+canvas{
+
+  width:800px !important;
+  height:600px !important;
+
+}
