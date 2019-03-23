@@ -80,7 +80,7 @@ def convert_daily_into_dict(daily):
     fields = ['day_of_week', 'date', 'rank', 'gross', 'increase', 'lw', 'theatres',
               'avg_theatre', 'total_gross', 'day_in_bo']
     zipped_info = dict(zip(fields, daily_vals))
-    return { zipped_info['day_in_bo']: zipped_info}
+    return zipped_info
 
 def find_daily_info(movie_page):
     """
