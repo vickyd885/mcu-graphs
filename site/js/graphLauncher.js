@@ -15,6 +15,7 @@ Load dataset and parse values before displaying on graph
  $.getJSON("datasets/mcu_data_locked.json", function(json) {
    loadGlobalBoxOfficeGraph(json);
    loadDailyBoxOfficeGraph(json);
+   loadDBoxOfficeRankingGraph(json);
 
  });
 
@@ -83,6 +84,34 @@ Load dataset and parse values before displaying on graph
 
  }
 
+ function getBoxOfficeRankingData(movieList){
+   datasets = []
+   maxLabelLength = 0;
+   movieList.forEach(function(movie){
+     dataset = {
+       label: movie.movie,
+       borderColor: getRandomColor(),
+       fill: false,
+       data: []
+     }
+     if(movie.bom_data.daily == null){
+       console.log("No data for " + movie.movie)
+       return;
+     }
+     movie.bom_data.daily.forEach(function(day){
+       rank = day.rank == '-'? 0 : parseInt(day.rank);
+       dataset.data.push(rank)
+     });
+     if(dataset.data.length > maxLabelLength) maxLabelLength = dataset.data.length;
+     datasets.push(dataset);
+   });
+   console.log(maxLabelLength);
+   labels = Array.apply(null, {length: 60}).map(Number.call, Number)
+   console.log(labels);
+   return [labels, datasets]
+
+ }
+
 
 function loadGlobalBoxOfficeGraph(json){
   cleaned_data = getGlobalBoxOfficeData(json);
@@ -129,6 +158,39 @@ function loadDailyBoxOfficeGraph(json){
           scaleLabel: {
             display: true,
             labelString: 'Dollars ($/million)'
+          }
+        }],
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Days after release'
+          }
+        }]
+      }
+    }
+  })
+}
+
+function loadDBoxOfficeRankingGraph(json){
+  cleaned_data = getBoxOfficeRankingData(json);
+  var ctx = document.getElementById('boranking').getContext('2d');
+  console.log(cleaned_data);
+  var globalChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: cleaned_data[0],
+      datasets: cleaned_data[1]
+    },
+    options: {
+    scales: {
+        responsive: true,
+        yAxes:[{
+          scaleLabel: {
+            display: true,
+            labelString: 'Dollars ($/million)'
+          },
+          ticks: {
+            reverse: true,
           }
         }],
         xAxes: [{
