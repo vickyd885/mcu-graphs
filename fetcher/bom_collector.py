@@ -44,11 +44,11 @@ def get_html_pages(id):
     GET request a url
     """
     pages = {'summary': {
-                'url': ROOT_URL + '?' + id,
+                'url': ROOT_URL + '?id=' + id,
                 'html': '',
                 },
              'daily': {
-                'url': ROOT_URL + '?page=daily&view=chart&' + id,
+                'url': ROOT_URL + '?page=daily&view=chart&id=' + id,
                 'html': ''
              }
     }
@@ -92,13 +92,14 @@ def find_daily_info(movie_page):
         dailies = dailies.replace('AvgGross-to-DateDay #', '').replace('* Note:', '')
 
         dailies = dailies.split('\n\n')
+        dailies = filter(lambda x: x != '',  dailies)
         converted_dailies = map(convert_daily_into_dict, dailies)
 
         return list(converted_dailies)
 
     return None
 
-def find_stats(self, movie_page):
+def find_stats(movie_page):
     """
     Given a html page, find the stats that exist on it
     """
@@ -112,7 +113,7 @@ def find_stats(self, movie_page):
     soup = BeautifulSoup(movie_page['daily']['html'], 'html.parser')
     page_string = soup.get_text()
 
-    print(page_string)
+    # print(page_string)
 
     movie_stats['daily'] = find_daily_info(page_string)
 
