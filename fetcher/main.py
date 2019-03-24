@@ -1,7 +1,9 @@
 import json
 import csv
+
 from bom_collector import BOMCollector
 from rt_collector import RTCollector
+from cs_collector import CSCollector
 
 def get_movie_list():
     """
@@ -31,5 +33,6 @@ if __name__ == '__main__':
         rt_id = movie['rt_id'].replace(' ','')
         movie['bom_data'] = BOMCollector.get_stats(bom_id)
         movie['rt_data'] = RTCollector.get_scores(rt_id)
+        movie['cinema_score'] = CSCollector.get_score(movie['movie'])
 
     write_to_json('mcu_data', movie_list)

@@ -6,6 +6,23 @@ baseColour = 200;
 colourSeed = 1;
 colourIncrement = 5;
 
+
+var gradeMap = {
+  'A+': 100,
+  'A': 90,
+  'A-': 80,
+  'B+': 70,
+  'B': 60,
+}
+
+var reversedGradeMap = {
+  100: 'A+',
+  90: 'A',
+  80: 'A-',
+  70: 'B+',
+  60: 'B'
+}
+
 function genColor() {
   var  newShade = baseColour - colourSeed * colourIncrement;
   newShade = 10;
@@ -13,7 +30,7 @@ function genColor() {
   console.log(alpha)
   colourSeed += 1
   return 'rgb(' + 237 + ',' + newShade + ',' + newShade + ',' + alpha + ')';
- }
+}
 
 
  $.getJSON("datasets/mcu_data_locked.json", function(json) {
@@ -22,6 +39,7 @@ function genColor() {
    loadDBoxOfficeRankingGraph(json);
    loadDailyThreatreGraph(json);
    loadRTGraph(json);
+   loadCSGraph(json);
 
  });
 
@@ -106,6 +124,25 @@ function genColor() {
    return [labels, datasets]
 
  }
+
+ function getCSData(movieList){
+   labels = []
+   datasets = [
+     {
+       label: 'Score',
+       backgroundColor: '#ED1024',
+       data: []
+     }
+   ]
+   movieList.forEach(function(movie){
+     console.log(movie.cinema_score);
+     datasets[0].data.push(gradeMap[movie.cinema_score]);
+     console.log(datasets[0].data);
+     labels.push(movie.movie);
+   });
+   return [labels, datasets]
+ }
+
 
  function getDailyBoxOfficeData(movieList){
    datasets = []
@@ -198,7 +235,7 @@ function loadGlobalBoxOfficeGraph(json){
   var ctx = document.getElementById('globalboxoffice').getContext('2d');
   console.log(cleaned_data[1][0].data);
   var globalChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'line',
     data: {
       labels: cleaned_data[0],
       datasets: cleaned_data[1]
@@ -213,7 +250,7 @@ function loadGlobalBoxOfficeGraph(json){
             stacked: true,
             scaleLabel: {
               display: true,
-              labelString: 'Dollars ($/million)'
+              labelString: 'Score'
             }
         }]
       }
@@ -342,8 +379,44 @@ function loadRTGraph(json){
         xAxes: [{
           stacked: true,
           scaleLabel: {
+            display: true
+          }
+        }]
+      }
+    }
+  })
+}
+
+function loadCSGraph(json){
+  colourSeed = 0;
+  cleaned_data = getCSData(json);
+  var ctx = document.getElementById('cinemascore').getContext('2d');
+  var globalChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: cleaned_data[0],
+      datasets: cleaned_data[1]
+    },
+    options: {
+    scales: {
+        responsive: true,
+        yAxes:[{
+          stacked: true,
+          scaleLabel: {
             display: true,
-            labelString: 'Movie'
+            labelString: 'Cinema Score'
+          },
+          ticks: {
+            // Include a dollar sign in the ticks
+            callback: function(value, index, values) {
+                return reversedGradeMap[value];
+              }
+          }
+        }],
+        xAxes: [{
+          stacked: true,
+          scaleLabel: {
+            display: true
           }
         }]
       }
