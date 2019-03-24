@@ -104,7 +104,7 @@ function genColor() {
        return;
      }
      movie.bom_data.daily.forEach(function(day){
-       rank = day.rank == '-'? 0 : parseInt(day.rank);
+       rank = day.rank == '-'? 25 : parseInt(day.rank);
        dataset.data.push(rank)
      });
      if(dataset.data.length > maxLabelLength) maxLabelLength = dataset.data.length;
