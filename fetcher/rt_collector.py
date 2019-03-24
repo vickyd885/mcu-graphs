@@ -1,3 +1,11 @@
+"""
+Fetches and parses Rotten Tomatoes data to return a dictionary containing:
+- audience_rating (Numeric percentage of what the audience thought)
+- fresh_count (Number of fresh reviews)
+- rotten_count (Number of rotten reviews)
+- official_score (RT)
+"""
+
 import re
 import requests
 from bs4 import BeautifulSoup
@@ -25,6 +33,7 @@ class RTCollector:
         """
         Gets scores of given id
         """
+        print("Getting RT data")
         html = get_html_page(id)
         if html:
             soup = BeautifulSoup(html, 'html.parser')
@@ -54,7 +63,7 @@ def get_html_page(id):
     response = requests.get(url)
     if response.status_code == 200:
         return response.text
-    print('Returned response code %d', response.status_code)
+    print('Returned response code', response.status_code)
     return None
 
 

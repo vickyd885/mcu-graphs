@@ -1,6 +1,11 @@
 """
-Fetches data from box office mojo
+Fetches and parses data from box office mojo, returning a dictionary of
+useful values, in particular:
+- summary info [ lifetime gross, domestic gross, foreign gross ]
+- daily [ list of daily grosses at the box office ]
+- .. more to be added
 """
+
 import re
 import json
 import requests
@@ -8,7 +13,7 @@ from bs4 import BeautifulSoup
 
 ROOT_URL = 'https://www.boxofficemojo.com/movies/'
 
-LIFETIME_GROSS = ('lifetime_gross', re.compile(r'Worldwide:\n?(.+)$'))
+LIFETIME_GROSS = ('lifetime_gross', re.compile(r'Worldwide:\n?(.+)'))
 
 LIFETIME_DOMESTIC_GROSS = ('lifetime_domestic_gross',
                            re.compile(r'Domestic:\n?(.+)\n?(.+)'))
@@ -28,13 +33,13 @@ SUMMARY_RES = [
 
 DAILY_GROSS = re.compile(r'AvgGross-to-DateDay #(.|\n)*\*\sNote:')
 
-
 class BOMCollector:
 
     def get_stats(id):
         """
         Gets stats from BOM
         """
+        print("Getting BOM data for ",id)
         pages = get_html_pages(id)
         return find_stats(pages)
 
@@ -46,7 +51,7 @@ def get_html_pages(id):
     pages = {'summary': {
                 'url': ROOT_URL + '?id=' + id,
                 'html': '',
-                },
+             },
              'daily': {
                 'url': ROOT_URL + '?page=daily&view=chart&id=' + id,
                 'html': ''
@@ -56,7 +61,7 @@ def get_html_pages(id):
         response = requests.get(pages[page]['url'])
         if response.status_code == 200:
             pages[page]['html'] = response.text
-        print('Returned response code %d', response.status_code)
+        print('Returned response code', response.status_code)
     return pages
 
 def find_summary_info(movie_page):
@@ -101,7 +106,8 @@ def find_daily_info(movie_page):
 
 def find_stats(movie_page):
     """
-    Given a html page, find the stats that exist on it
+    Given a html page, find the stats that exist on it by calling appropiate
+    string parsers
     """
     movie_stats = {}
 

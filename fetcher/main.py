@@ -1,3 +1,10 @@
+"""
+Script calls different collectors which in turn collect respective data.
+This module is responsible for reading/writing appropiate files, namely:
+- movie_links.csv -> contains metadata such as movie name, links the webpage etc
+- mcu_data.json -> final output file
+"""
+
 import json
 import csv
 
@@ -22,13 +29,18 @@ def get_movie_list():
 
 
 def write_to_json(filename, data):
+    """
+    JSON dump data to a json file given a filename
+    """
     with open(filename + '.json', 'w') as outfile:
         json.dump(data, outfile)
 
 if __name__ == '__main__':
 
     movie_list = get_movie_list()
+
     for movie in movie_list:
+        print("Fetching data for movie: ", movie['movie'])
         bom_id = movie['bom_id'].replace(' ','')
         rt_id = movie['rt_id'].replace(' ','')
         movie['bom_data'] = BOMCollector.get_stats(bom_id)
