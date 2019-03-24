@@ -1,22 +1,22 @@
-name,bom_id,rt_link
-Iron man,ironman.htm
-Iron man 2, ironman2.htm
-Hulk, incrediblehulk.htm
-Thor,thor.htm
-Captain America,captainamerica.htm
-Avengers,avengers11.htm
-Iron man 3,ironman3.htm
-Thor 2,thor2.htm
-Winter Soldier,marvel14b.htm
-GoG,marvel2014a.htm
-Avengers 2, buenavista.htm
-Antman,antman.htm
-Civil War,marvel2016.htm
-Doctor Strange,marvel716.htm
-GoG 2,marvel17a.htm
-Spiderman: Homecoming,spiderman2017.htm
-Thor Ragnarok,marvel2017.htm
-Black Panther,marvel2017b.htm
-Avengers: Infinity war,marvel0518.htm
-Antman and the Wasp,ant-manandthewasp.htm
-Captain Marvel,marvel2018a.htm
+name,bom_id,rt_id
+Iron Man,ironman.htm,iron_man
+Iron Man 2, ironman2.htm,iron_man_2
+Hulk, incrediblehulk.htm,the_incredible_hulk
+Thor,thor.htm,thor
+Captain America,captainamerica.htm,captain_america_the_first_avenger
+Avengers,avengers11.htm,marvels_the_avengers
+Iron man 3,ironman3.htm,iron_man_3
+Thor 2,thor2.htm,thor_the_dark_world
+Winter Soldier,marvel14b.htm,captain_america_the_winter_soldier_2014
+GoG,marvel2014a.htm,guardians_of_the_galaxy
+Avengers 2, avengers2.htm,avengers_age_of_ultron
+Ant-Man,antman.htm,antman
+Civil War,marvel2016.htm,captain_america_civil_war
+Doctor Strange,marvel716.htm,doctor_strange_2016
+GoG 2,marvel17a.htm,guardians_of_the_galaxy_vol_2
+Spiderman: Homecoming,spiderman2017.htm,spider_man_homecoming
+Thor Ragnarok,marvel2017.htm,thor_ragnarok_2017
+Black Panther,marvel2017b.htm,black_panther_2018
+Avengers: Infinity war,marvel0518.htm,avengers_infinity_war
+Ant-Man and the Wasp,ant-manandthewasp.htm,ant_man_and_the_wasp
+Captain Marvel,marvel2018a.htm,captain_marvel
