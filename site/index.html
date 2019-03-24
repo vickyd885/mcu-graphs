@@ -7,11 +7,16 @@
   </head>
   <body>
     <h1> Marvel Cinematic Universe | In Graphs </h1>
-    <p>
-      <b> A collection of graphs focusing on the best franchise of all time. </b>
-      <br> Data sources include: <a href='https://www.boxofficemojo.com'>Box Office Mojo</a>,
-      Rotten Tomatoes,
+    <h2> A collection of graphs focusing on the best franchise of all time. </h2>
+    <p style="{padding: 5px;}">
 
+      <br> Data sources include: <a target="_blank" href='https://www.boxofficemojo.com'>Box Office Mojo</a>,
+      <a target = '_blank' href='https://www.rottentomatoes.com/'>Rotten Tomatoes</a>, <a target="_blank" href='https://www.cinemascore.com/'>CinemaScore</a>.
+      <br>
+
+      <br> Of course, all datasets (and the magical scripts used to find the data) are <b>freely avaiable <a href='https://github.com/vickyd885/mcu-graphs' target="=_blank">here</a>.</b>
+
+      <br><a target="_blank" href='https://vickyd885.github.io/site/'>Contact the author</a> if you have any questions/ideas :) </br>
     </p>
 
     <h2> Global Box Office </h2>
@@ -21,6 +26,9 @@
 
 
     <h2> Box Office Ranking </h2>
+    <p>The shade of red indicates when the movie was released, the earliest movies are a light red and later ones darker. <br>
+      This can help distinguish between the phases.<br>
+      You can also hide data from particular movies by clicking the box next to the movie name in the legend. </p>
     <div class="graph">
       <canvas id="boranking"></canvas>
     <div>
@@ -46,15 +54,12 @@
       <canvas id="cinemascore"></canvas>
     </div>
 
-    <h2> Awards (Nominated & Won)</h2>
-    <div class='graph'>
-      <canvas id="awards"></canvas>
-    </div>
 
-    <h2> Rankings </h2>
-    <div class='graph'>
-      <canvas id="awards"></canvas>
-    </div>
+    <h3> Graphs coming soon... </h3>
+    <li> Awards: Nominated/Won </li>
+    <li> Box office per country </li>
+    <li> Rankings of lists </li>
+
 
 
   </body>

@@ -6,23 +6,6 @@ baseColour = 200;
 colourSeed = 1;
 colourIncrement = 5;
 
-
-var gradeMap = {
-  'A+': 100,
-  'A': 90,
-  'A-': 80,
-  'B+': 70,
-  'B': 60,
-}
-
-var reversedGradeMap = {
-  100: 'A+',
-  90: 'A',
-  80: 'A-',
-  70: 'B+',
-  60: 'B'
-}
-
 function genColor() {
   var  newShade = baseColour - colourSeed * colourIncrement;
   newShade = 10;
@@ -235,7 +218,7 @@ function loadGlobalBoxOfficeGraph(json){
   var ctx = document.getElementById('globalboxoffice').getContext('2d');
   console.log(cleaned_data[1][0].data);
   var globalChart = new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: cleaned_data[0],
       datasets: cleaned_data[1]
@@ -422,4 +405,20 @@ function loadCSGraph(json){
       }
     }
   })
+}
+
+var gradeMap = {
+  'A+': 100,
+  'A': 90,
+  'A-': 80,
+  'B+': 70,
+  'B': 60,
+}
+
+var reversedGradeMap = {
+  100: 'A+',
+  90: 'A',
+  80: 'A-',
+  70: 'B+',
+  60: 'B'
 }
