@@ -21,12 +21,58 @@ function genColor() {
    loadDailyBoxOfficeGraph(json);
    loadDBoxOfficeRankingGraph(json);
    loadDailyThreatreGraph(json);
+   loadRTGraph(json);
 
  });
 
  function getMonetaryValue(amount){
    // return 400 from $4,00 etc
    return parseFloat(amount.replace('$','').replace(',','').replace(',','').replace(',','') / 1000000);
+
+ }
+
+ function getRTData(movieList){
+   labels = []
+   datasets = [
+     {
+       label: 'Audience Rating',
+       borderColor: '#21A0A0',
+       data: [],
+       type: 'line',
+       fill: false
+     },
+     {
+       label: 'Rotten (%)',
+       backgroundColor: '#00c94d',
+       data: []
+     },
+     {
+       label: 'Fresh (%)',
+       backgroundColor: '#fd2d00',
+       data: []
+     }
+
+   ]
+   movieList.forEach(function(movie){
+
+     official_score = parseInt(movie.rt_data.official_score.replace('%',''));
+     audience_score = parseInt(movie.rt_data.audience_rating.replace('%',''));
+     fresh_count = parseInt(movie.rt_data.fresh_count);
+     rotten_count = parseInt(movie.rt_data.rotten_count);
+
+     total_reviews = fresh_count + rotten_count;
+     fresh_mapped = official_score * (fresh_count/total_reviews);
+     rotten_mapped = official_score * (rotten_count/total_reviews);
+
+     datasets[2].data.push(fresh_mapped)
+     datasets[1].data.push(rotten_mapped)
+     datasets[0].data.push(audience_score)
+     labels.push(movie.movie)
+   });
+
+   console.log(datasets[1].data)
+
+   return [labels, datasets]
 
  }
 
@@ -143,6 +189,7 @@ function genColor() {
    return [labels, datasets]
 
  }
+
 
 
 function loadGlobalBoxOfficeGraph(json){
@@ -264,6 +311,39 @@ function loadDBoxOfficeRankingGraph(json){
           scaleLabel: {
             display: true,
             labelString: 'Days after release'
+          }
+        }]
+      }
+    }
+  })
+}
+
+function loadRTGraph(json){
+  colourSeed = 0;
+  cleaned_data = getRTData(json);
+  var ctx = document.getElementById('rtgraph').getContext('2d');
+  console.log(cleaned_data);
+  var globalChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: cleaned_data[0],
+      datasets: cleaned_data[1]
+    },
+    options: {
+    scales: {
+        responsive: true,
+        yAxes:[{
+          stacked: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'RT Score'
+          }
+        }],
+        xAxes: [{
+          stacked: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Movie'
           }
         }]
       }
