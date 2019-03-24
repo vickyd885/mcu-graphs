@@ -2,13 +2,17 @@
 Load dataset and parse values before displaying on graph
  */
 
- function getRandomColor() {
-     var letters = '0123456789ABCDEF'.split('');
-     var color = '#';
-     for (var i = 0; i < 6; i++ ) {
-         color += letters[Math.floor(Math.random() * 16)];
-     }
-     return color;
+baseColour = 200;
+colourSeed = 1;
+colourIncrement = 5;
+
+function genColor() {
+  var  newShade = baseColour - colourSeed * colourIncrement;
+  newShade = 10;
+  var alpha = (colourIncrement/100) * colourSeed;
+  console.log(alpha)
+  colourSeed += 1
+  return 'rgb(' + 237 + ',' + newShade + ',' + newShade + ',' + alpha + ')';
  }
 
 
@@ -16,6 +20,7 @@ Load dataset and parse values before displaying on graph
    loadGlobalBoxOfficeGraph(json);
    loadDailyBoxOfficeGraph(json);
    loadDBoxOfficeRankingGraph(json);
+   loadDailyThreatreGraph(json);
 
  });
 
@@ -31,12 +36,12 @@ Load dataset and parse values before displaying on graph
    datasets = [
      {
        label: 'Domestic',
-       backgroundColor: '#FE5F55',
+       backgroundColor: '#ED1024',
        data: []
      },
      {
        label: 'International',
-       backgroundColor: '#F9C22E',
+       backgroundColor: '#F36673',
        data: []
      }
    ]
@@ -62,7 +67,7 @@ Load dataset and parse values before displaying on graph
    movieList.forEach(function(movie){
      dataset = {
        label: movie.movie,
-       borderColor: getRandomColor(),
+       borderColor: genColor(),
        fill: false,
        data: []
      }
@@ -78,7 +83,7 @@ Load dataset and parse values before displaying on graph
      datasets.push(dataset);
    });
    console.log(maxLabelLength);
-   labels = Array.apply(null, {length: 60}).map(Number.call, Number)
+   labels = Array.apply(null, {length: 30}).map(Number.call, Number)
    console.log(labels);
    return [labels, datasets]
 
@@ -90,7 +95,7 @@ Load dataset and parse values before displaying on graph
    movieList.forEach(function(movie){
      dataset = {
        label: movie.movie,
-       borderColor: getRandomColor(),
+       borderColor: genColor(),
        fill: false,
        data: []
      }
@@ -112,8 +117,36 @@ Load dataset and parse values before displaying on graph
 
  }
 
+ function getDailyTheatreData(movieList){
+   datasets = []
+   maxLabelLength = 0;
+   movieList.forEach(function(movie){
+     dataset = {
+       label: movie.movie,
+       borderColor: genColor(),
+       fill: false,
+       data: []
+     }
+     if(movie.bom_data.daily == null){
+       console.log("No data for " + movie.movie)
+       return;
+     }
+     movie.bom_data.daily.forEach(function(day){
+       theatreCount = parseInt(day.theatres.replace(',',''))
+       dataset.data.push(theatreCount)
+     });
+     datasets.push(dataset);
+   });
+   console.log(maxLabelLength);
+   labels = Array.apply(null, {length: 60}).map(Number.call, Number)
+   console.log(labels);
+   return [labels, datasets]
+
+ }
+
 
 function loadGlobalBoxOfficeGraph(json){
+  colourSeed = 0;
   cleaned_data = getGlobalBoxOfficeData(json);
   var ctx = document.getElementById('globalboxoffice').getContext('2d');
   console.log(cleaned_data[1][0].data);
@@ -142,6 +175,7 @@ function loadGlobalBoxOfficeGraph(json){
 }
 
 function loadDailyBoxOfficeGraph(json){
+  colourSeed = 0;
   cleaned_data = getDailyBoxOfficeData(json);
   var ctx = document.getElementById('dailyboxoffice').getContext('2d');
   console.log(cleaned_data);
@@ -171,7 +205,40 @@ function loadDailyBoxOfficeGraph(json){
   })
 }
 
+
+function loadDailyThreatreGraph(json){
+  colourSeed = 0;
+  cleaned_data = getDailyTheatreData(json);
+  var ctx = document.getElementById('theatres').getContext('2d');
+  console.log(cleaned_data);
+  var globalChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: cleaned_data[0],
+      datasets: cleaned_data[1]
+    },
+    options: {
+    scales: {
+        responsive: true,
+        yAxes:[{
+          scaleLabel: {
+            display: true,
+            labelString: 'Number of theatres playing movie'
+          }
+        }],
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Days after release'
+          }
+        }]
+      }
+    }
+  })
+}
+
 function loadDBoxOfficeRankingGraph(json){
+  colourSeed = 0;
   cleaned_data = getBoxOfficeRankingData(json);
   var ctx = document.getElementById('boranking').getContext('2d');
   console.log(cleaned_data);
