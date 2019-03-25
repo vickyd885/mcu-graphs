@@ -4,7 +4,7 @@ Load dataset and parse values before displaying on graph
 
 baseColour = 200;
 colourSeed = 1;
-colourIncrement = 5;
+colourIncrement = 6;
 
 function genColor() {
   var  newShade = baseColour - colourSeed * colourIncrement;
@@ -12,7 +12,7 @@ function genColor() {
   var alpha = (colourIncrement/100) * colourSeed;
   console.log(alpha)
   colourSeed += 1
-  return 'rgb(' + 237 + ',' + newShade + ',' + newShade + ',' + alpha + ')';
+  return 'rgb(' + 255 + ',' + newShade + ',' + newShade + ',' + alpha + ')';
 }
 
 
@@ -238,7 +238,7 @@ function genColor() {
 
 
 function loadGlobalBoxOfficeGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getGlobalBoxOfficeData(json);
   var ctx = document.getElementById('globalboxoffice').getContext('2d');
   console.log(cleaned_data[1][0].data);
@@ -267,7 +267,7 @@ function loadGlobalBoxOfficeGraph(json){
 }
 
 function loadDailyBoxOfficeGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getDailyBoxOfficeData(json);
   var ctx = document.getElementById('dailyboxoffice').getContext('2d');
   console.log(cleaned_data);
@@ -299,7 +299,7 @@ function loadDailyBoxOfficeGraph(json){
 
 
 function loadDailyThreatreGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getDailyTheatreData(json);
   var ctx = document.getElementById('theatres').getContext('2d');
   console.log(cleaned_data);
@@ -330,7 +330,7 @@ function loadDailyThreatreGraph(json){
 }
 
 function loadDBoxOfficeRankingGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getBoxOfficeRankingData(json);
   var ctx = document.getElementById('boranking').getContext('2d');
   console.log(cleaned_data);
@@ -364,7 +364,7 @@ function loadDBoxOfficeRankingGraph(json){
 }
 
 function loadRTGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getRTData(json);
   var ctx = document.getElementById('rtgraph').getContext('2d');
   console.log(cleaned_data);
@@ -396,7 +396,7 @@ function loadRTGraph(json){
 }
 
 function loadCSGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getCSData(json);
   var ctx = document.getElementById('cinemascore').getContext('2d');
   var globalChart = new Chart(ctx, {
@@ -433,7 +433,7 @@ function loadCSGraph(json){
 }
 
 function loadAccumBOGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getAccumBOData(json);
   var ctx = document.getElementById('accumgraph').getContext('2d');
   var globalChart = new Chart(ctx, {
