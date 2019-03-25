@@ -2,9 +2,9 @@
 Load dataset and parse values before displaying on graph
  */
 
-baseColour = 200;
+baseColour = 229;
 colourSeed = 1;
-colourIncrement = 6;
+colourIncrement = 3;
 
 function genColor() {
   var  newShade = baseColour - colourSeed * colourIncrement;
@@ -12,7 +12,7 @@ function genColor() {
   var alpha = (colourIncrement/100) * colourSeed;
   console.log(alpha)
   colourSeed += 1
-  return 'rgb(' + 255 + ',' + newShade + ',' + newShade + ',' + alpha + ')';
+  return 'rgb(' + newShade + ',' + newShade + ',' + newShade + ',' + alpha + ')';
 }
 
 
