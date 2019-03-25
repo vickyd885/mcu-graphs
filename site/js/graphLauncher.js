@@ -23,6 +23,7 @@ function genColor() {
    loadDailyThreatreGraph(json);
    loadRTGraph(json);
    loadCSGraph(json);
+   loadAccumBOGraph(json);
 
  });
 
@@ -123,6 +124,30 @@ function genColor() {
      console.log(datasets[0].data);
      labels.push(movie.movie);
    });
+   return [labels, datasets]
+ }
+
+ function getAccumBOData(movieList){
+   labels = []
+   datasets = [
+     {
+       label: 'Dollars ($/million)',
+       borderColor: '#ED1024',
+       data: []
+     }
+   ]
+   index = 0;
+
+   for(i in movieList){
+       var movie = movieList[i];
+       var movieGross = movie.bom_data.summary.lifetime_gross;
+       var movieGrossInt = parseInt(getMonetaryValue(movieGross));
+       console.log(datasets[0].data[i-1]);
+       if(i == 0) datasets[0].data.push(movieGrossInt)
+       else datasets[0].data.push((movieGrossInt + datasets[0].data[i-1]));
+
+       labels.push(movie.movie);
+   }
    return [labels, datasets]
  }
 
@@ -233,7 +258,7 @@ function loadGlobalBoxOfficeGraph(json){
             stacked: true,
             scaleLabel: {
               display: true,
-              labelString: 'Score'
+              labelString: 'Dollars ($/millions)'
             }
         }]
       }
@@ -321,7 +346,7 @@ function loadDBoxOfficeRankingGraph(json){
         yAxes:[{
           scaleLabel: {
             display: true,
-            labelString: 'Dollars ($/million)'
+            labelString: 'Ranking at the box office'
           },
           ticks: {
             reverse: true,
@@ -394,6 +419,37 @@ function loadCSGraph(json){
             callback: function(value, index, values) {
                 return reversedGradeMap[value];
               }
+          }
+        }],
+        xAxes: [{
+          stacked: true,
+          scaleLabel: {
+            display: true
+          }
+        }]
+      }
+    }
+  })
+}
+
+function loadAccumBOGraph(json){
+  colourSeed = 0;
+  cleaned_data = getAccumBOData(json);
+  var ctx = document.getElementById('accumgraph').getContext('2d');
+  var globalChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: cleaned_data[0],
+      datasets: cleaned_data[1]
+    },
+    options: {
+    scales: {
+        responsive: true,
+        yAxes:[{
+          stacked: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Dollars ($/million)'
           }
         }],
         xAxes: [{
