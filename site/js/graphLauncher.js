@@ -2,9 +2,9 @@
 Load dataset and parse values before displaying on graph
  */
 
-baseColour = 200;
+baseColour = 229;
 colourSeed = 1;
-colourIncrement = 5;
+colourIncrement = 3;
 
 function genColor() {
   var  newShade = baseColour - colourSeed * colourIncrement;
@@ -12,7 +12,7 @@ function genColor() {
   var alpha = (colourIncrement/100) * colourSeed;
   console.log(alpha)
   colourSeed += 1
-  return 'rgb(' + 237 + ',' + newShade + ',' + newShade + ',' + alpha + ')';
+  return 'rgb(' + newShade + ',' + newShade + ',' + newShade + ',' + alpha + ')';
 }
 
 
@@ -23,6 +23,7 @@ function genColor() {
    loadDailyThreatreGraph(json);
    loadRTGraph(json);
    loadCSGraph(json);
+   loadAccumBOGraph(json);
 
  });
 
@@ -126,6 +127,30 @@ function genColor() {
    return [labels, datasets]
  }
 
+ function getAccumBOData(movieList){
+   labels = []
+   datasets = [
+     {
+       label: 'Dollars ($/million)',
+       borderColor: '#ED1024',
+       data: []
+     }
+   ]
+   index = 0;
+
+   for(i in movieList){
+       var movie = movieList[i];
+       var movieGross = movie.bom_data.summary.lifetime_gross;
+       var movieGrossInt = parseInt(getMonetaryValue(movieGross));
+       console.log(datasets[0].data[i-1]);
+       if(i == 0) datasets[0].data.push(movieGrossInt)
+       else datasets[0].data.push((movieGrossInt + datasets[0].data[i-1]));
+
+       labels.push(movie.movie);
+   }
+   return [labels, datasets]
+ }
+
 
  function getDailyBoxOfficeData(movieList){
    datasets = []
@@ -213,7 +238,7 @@ function genColor() {
 
 
 function loadGlobalBoxOfficeGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getGlobalBoxOfficeData(json);
   var ctx = document.getElementById('globalboxoffice').getContext('2d');
   console.log(cleaned_data[1][0].data);
@@ -233,7 +258,7 @@ function loadGlobalBoxOfficeGraph(json){
             stacked: true,
             scaleLabel: {
               display: true,
-              labelString: 'Score'
+              labelString: 'Dollars ($/millions)'
             }
         }]
       }
@@ -242,7 +267,7 @@ function loadGlobalBoxOfficeGraph(json){
 }
 
 function loadDailyBoxOfficeGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getDailyBoxOfficeData(json);
   var ctx = document.getElementById('dailyboxoffice').getContext('2d');
   console.log(cleaned_data);
@@ -274,7 +299,7 @@ function loadDailyBoxOfficeGraph(json){
 
 
 function loadDailyThreatreGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getDailyTheatreData(json);
   var ctx = document.getElementById('theatres').getContext('2d');
   console.log(cleaned_data);
@@ -305,7 +330,7 @@ function loadDailyThreatreGraph(json){
 }
 
 function loadDBoxOfficeRankingGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getBoxOfficeRankingData(json);
   var ctx = document.getElementById('boranking').getContext('2d');
   console.log(cleaned_data);
@@ -321,7 +346,7 @@ function loadDBoxOfficeRankingGraph(json){
         yAxes:[{
           scaleLabel: {
             display: true,
-            labelString: 'Dollars ($/million)'
+            labelString: 'Ranking at the box office'
           },
           ticks: {
             reverse: true,
@@ -339,7 +364,7 @@ function loadDBoxOfficeRankingGraph(json){
 }
 
 function loadRTGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getRTData(json);
   var ctx = document.getElementById('rtgraph').getContext('2d');
   console.log(cleaned_data);
@@ -371,7 +396,7 @@ function loadRTGraph(json){
 }
 
 function loadCSGraph(json){
-  colourSeed = 0;
+  colourSeed = 1;
   cleaned_data = getCSData(json);
   var ctx = document.getElementById('cinemascore').getContext('2d');
   var globalChart = new Chart(ctx, {
@@ -394,6 +419,37 @@ function loadCSGraph(json){
             callback: function(value, index, values) {
                 return reversedGradeMap[value];
               }
+          }
+        }],
+        xAxes: [{
+          stacked: true,
+          scaleLabel: {
+            display: true
+          }
+        }]
+      }
+    }
+  })
+}
+
+function loadAccumBOGraph(json){
+  colourSeed = 1;
+  cleaned_data = getAccumBOData(json);
+  var ctx = document.getElementById('accumgraph').getContext('2d');
+  var globalChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: cleaned_data[0],
+      datasets: cleaned_data[1]
+    },
+    options: {
+    scales: {
+        responsive: true,
+        yAxes:[{
+          stacked: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Dollars ($/million)'
           }
         }],
         xAxes: [{
